@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.wolfesoftware.bourbonchecker.BourbonCheckerApplication'
+
+                // Chose to solve this on the command line where we will use the -cp option to point to the
+                // lib directory where all of the dependencies will be located.
+
+
+
+                /*
+                'Class-Path': 'BourbonChecker-0.9.jar lib/'
+                */
+                /*
+                'Class-Path': 'c3p0-0.9.5.4.jar HikariCP-java7-2.4.13.jar jackson-annotations-2.10.0.jar ' +
+                              'jackson-core-2.10.0.jar jackson-databind-2.10.0.jar jackson-dataformat-csv-2.10.0.jar ' +
+                              'logback-classic-1.2.3.jar logback-core-1.2.3.jar mchange-commons-java-0.2.15.jar ' +
+                              'messagebird-api-3.0.12.jar quartz-2.3.2.jar slf4j-api-1.7.30.jar'
+                */
+        )
+    }
+}
+
+group 'com.wolfesoftware'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.messagebird', name: 'messagebird-api', version: '3.0.12'
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-5'
+
+    runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task copyConfigs(type:Copy) {
+    from 'src/main/resources/application.properties'
+    into 'build/libs/config'
+}
+
+task copyDeps(type:Copy) {
+    from configurations.runtime
+    into 'build/libs/lib'
+}
+
+task copyScripts(type:Copy) {
+    from 'src/main/scripts'
+    into 'build/libs'
+}
+
+jar {
+    exclude('application.properties')
+}
+
+task productionBuild() {
+    dependsOn 'clean'
+    dependsOn 'jar'
+    dependsOn 'copyConfigs'
+    dependsOn 'copyDeps'
+    dependsOn 'copyScripts'
+}
+

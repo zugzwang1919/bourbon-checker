@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: com.wolfesoftware.bourbonchecker.BourbonCheckerApplication
+Class-Path: quartz-2.3.2.jar
+
