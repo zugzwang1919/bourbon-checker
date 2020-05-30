@@ -117,8 +117,11 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (lastMessageSent ==  null  ||  LocalDateTime.now().isAfter(lastMessageSent.plusMinutes(repeatMessageWaitTime))) {
                         String textMessage = productName + " is now available on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        new MessageBirdSmsSender().sendMessage(textMessage);
+                        //new MessageBirdSmsSender().sendMessage(textMessage);
                         lastMessageSent = LocalDateTime.now();
+                    }
+                    else {
+                        logger.debug("{} was found on the Buffalo Trace website, but no message will be sent due to recent sendings.", productName);
                     }
                     break;
                 }
@@ -126,8 +129,11 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (!soldOutMessageSent) {
                         String textMessage = productName + " is now SOLD OUT on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        new MessageBirdSmsSender().sendMessage(textMessage);
+                        //new MessageBirdSmsSender().sendMessage(textMessage);
                         soldOutMessageSent = true;
+                    }
+                    else {
+                        logger.debug("{} was found SOLD OUT on the Buffalo Trace website, but no message will be sent due to recent sendings.", productName);
                     }
                     break;
                 }
