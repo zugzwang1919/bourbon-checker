@@ -26,7 +26,7 @@ public class BourbonCheckerApplication {
                 build();
 
         // Build a JOB_DETAIL for quartz
-        JobDetail job = JobBuilder.newJob(ScheduledQuartzJob.class).
+        JobDetail job = JobBuilder.newJob(BuffaloTraceQuartzJob.class).
                 withIdentity("TheBourbonJob").
                 build();
 
