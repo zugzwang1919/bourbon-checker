@@ -1,0 +1,4 @@
+{
+  "cronExpression" : "0 0/2 8-23 * * ?",
+  "chromeDriverLocation" : "C:/Temp/ChromeDriver/chromedriver.exe"
+}

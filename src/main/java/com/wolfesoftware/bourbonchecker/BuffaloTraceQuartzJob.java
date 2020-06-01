@@ -33,7 +33,7 @@ public class BuffaloTraceQuartzJob implements Job {
         chromeOptions.setHeadless(true);
         chromeOptions.addArguments("--window-size=1920,1000");
 
-        String executablePath = BourbonCheckerProperties.getProperties().getProperty("chromeDriverLocation");
+        String executablePath = BourbonCheckerSettings.getInstance().getChromeDriverLocation();
         System.setProperty("webdriver.chrome.driver", executablePath);
         driver =  new ChromeDriver(chromeOptions);
         // Make one call to the general website to get the initial set of cookies
@@ -117,7 +117,7 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (lastMessageSent ==  null  ||  LocalDateTime.now().isAfter(lastMessageSent.plusMinutes(repeatMessageWaitTime))) {
                         String textMessage = productName + " is now available on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        //new MessageBirdSmsSender().sendMessage(textMessage);
+                        new MessageBirdSmsSender().sendMessage(textMessage);
                         lastMessageSent = LocalDateTime.now();
                     }
                     else {
@@ -129,7 +129,7 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (!soldOutMessageSent) {
                         String textMessage = productName + " is now SOLD OUT on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        //new MessageBirdSmsSender().sendMessage(textMessage);
+                        new MessageBirdSmsSender().sendMessage(textMessage);
                         soldOutMessageSent = true;
                     }
                     else {

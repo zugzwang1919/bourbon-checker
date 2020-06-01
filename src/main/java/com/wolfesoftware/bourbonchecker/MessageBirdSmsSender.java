@@ -32,8 +32,10 @@ public class MessageBirdSmsSender {
         try {
 
             List<BigInteger> recipients = new ArrayList();
-            BigInteger theRecipient = new BigInteger("18593278846");
-            recipients.add(theRecipient);
+            BigInteger russ = new BigInteger("18593278846");
+            BigInteger roger = new BigInteger("18593385240");
+            recipients.add(russ);
+            recipients.add(roger);
             final MessageResponse response = messageBirdClient.sendMessage("Russ Wolfe", message, recipients);
             logger.debug("Response from MessageBird = {}", response.toString());
 

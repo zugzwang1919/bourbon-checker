@@ -13,36 +13,43 @@ public class BourbonCheckerApplication {
 
     public static void main(String[] args) {
 
-        // Build a TRIGGER for quartz
-        String cronExpression = BourbonCheckerProperties.getProperties().getProperty("cronExpression");
-        if (cronExpression == null) {
-            logger.error("cronExpression not found in application.properties.  Exiting now.");
-            return;
-        }
-        logger.debug("Cron Expression = {}", cronExpression);
-        CronTrigger trigger = TriggerBuilder.newTrigger().
-                withIdentity("TheBourbonTrigger").
-                withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).
-                build();
-
-        // Build a JOB_DETAIL for quartz
-        JobDetail job = JobBuilder.newJob(BuffaloTraceQuartzJob.class).
-                withIdentity("TheBourbonJob").
-                build();
-
-        Properties quartzStaticProperties = new Properties();
-        quartzStaticProperties.put("org.quartz.threadPool.threadCount", "1");
-
         try {
-            SchedulerFactory schedulerFactory = new StdSchedulerFactory(quartzStaticProperties);
-            Scheduler scheduler = schedulerFactory.getScheduler();
-            scheduler.start();
-            scheduler.scheduleJob(job, trigger);
+            // Build a TRIGGER for quartz
+            String cronExpression = BourbonCheckerSettings.getInstance().getCronExpression();
+            if (cronExpression == null) {
+                logger.error("cronExpression not found in the BourbonCheckerSettings.  Exiting now.");
+                return;
+            }
+            logger.debug("Cron Expression = {}", cronExpression);
+            CronTrigger trigger = TriggerBuilder.newTrigger().
+                    withIdentity("TheBourbonTrigger").
+                    withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).
+                    build();
+
+            // Build a JOB_DETAIL for quartz
+            JobDetail job = JobBuilder.newJob(BuffaloTraceQuartzJob.class).
+                    withIdentity("TheBourbonJob").
+                    build();
+
+            Properties quartzStaticProperties = new Properties();
+            quartzStaticProperties.put("org.quartz.threadPool.threadCount", "1");
+
+            try {
+                SchedulerFactory schedulerFactory = new StdSchedulerFactory(quartzStaticProperties);
+                Scheduler scheduler = schedulerFactory.getScheduler();
+                scheduler.start();
+                scheduler.scheduleJob(job, trigger);
+            } catch (Exception e) {
+                logger.error("An unanticipated error occurred.  It's message is {} ", e.getMessage());
+            }
+            logger.debug("Leaving BourbonCheckerApplication()");
         }
-        catch(Exception e) {
-            logger.error("An unanticipated error occurred.  It's message is {} ", e.getMessage());
+        catch (Exception e) {
+            logger.error("An exception occurred and will cause this software to terminate.  Details follow:");
+            logger.error(e.getMessage());
+            logger.error("Exception details: ", e);
+
         }
-        logger.debug("Leaving BourbonCheckerApplication()");
     }
 
 }
