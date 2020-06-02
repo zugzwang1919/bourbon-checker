@@ -19,30 +19,38 @@ public class MessageBirdSmsSender {
 
 
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message, List<BigInteger> recipients) {
 
         // Keys
         // LIVE - live_sahwgCrOvdJ5tG97dEslrdMxQ
         // TEST - test_QdkvPlfJClByiCPwI5oFKIDC9
-        final MessageBirdService wsr = new MessageBirdServiceImpl("live_sahwgCrOvdJ5tG97dEslrdMxQ");
+        final MessageBirdService wsr = new MessageBirdServiceImpl("test_QdkvPlfJClByiCPwI5oFKIDC9");
 
         // Add the service to the client
         final MessageBirdClient messageBirdClient = new MessageBirdClient(wsr);
 
         try {
 
-            List<BigInteger> recipients = new ArrayList<>();
-            BigInteger russ = new BigInteger("18593278846");
-            BigInteger roger = new BigInteger("18593385240");
-            recipients.add(russ);
-            recipients.add(roger);
             final MessageResponse response = messageBirdClient.sendMessage("12028516595", message, recipients);
             logger.debug("Response from MessageBird = {}", response.toString());
 
+            // Let's make sure the messages were actually sent
+            Thread.sleep(10000);
+            final MessageResponse resultsResponse = messageBirdClient.viewMessage(response.getId());
+            final int numberOfTextsSent = resultsResponse.getRecipients().getTotalSentCount();
+            final int numberOfTextsDelivered = response.getRecipients().getTotalDeliveredCount();
+            if (numberOfTextsSent == numberOfTextsDelivered){
+                logger.info("All is good: {} messages sent.  {} messages delivered.", numberOfTextsSent, numberOfTextsDelivered);
+            }
+            else {
+                logger.error("Message ID {} had issues: {} messages sent.  {} messages delivered.", response.getId(), numberOfTextsSent, numberOfTextsDelivered);
+            }
+
         }
-        catch (UnauthorizedException | GeneralException e) {
+        catch (Exception e) {
             logger.error(e.getMessage());
             logger.error("Exception details: ", e);
+
         }
 
 

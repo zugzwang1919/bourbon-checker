@@ -11,7 +11,10 @@ import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BuffaloTraceQuartzJob implements Job {
@@ -68,11 +71,21 @@ public class BuffaloTraceQuartzJob implements Job {
         private LocalDateTime   lastMessageSent = null;
         private boolean         soldOutMessageSent = false;
 
+        private static List<BigInteger> RECIPIENTS;
+
         // Constructor
         public ProductInfo(String searchableString, String productName, int repeatMessageWaitTime) {
             this.searchableString = searchableString;
             this.productName = productName;
             this.repeatMessageWaitTime = repeatMessageWaitTime;
+        }
+
+        static {
+            RECIPIENTS = new ArrayList<>();
+            BigInteger russ = new BigInteger("18593278846");
+            BigInteger roger = new BigInteger("18593385240");
+            RECIPIENTS.add(russ);
+            RECIPIENTS.add(roger);
         }
 
         // Getters and Setters (for Jackson)
@@ -117,7 +130,7 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (lastMessageSent ==  null  ||  LocalDateTime.now().isAfter(lastMessageSent.plusMinutes(repeatMessageWaitTime))) {
                         String textMessage = productName + " is now available on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        new MessageBirdSmsSender().sendMessage(textMessage);
+                        new MessageBirdSmsSender().sendMessage(textMessage, RECIPIENTS);
                         lastMessageSent = LocalDateTime.now();
                     }
                     else {
@@ -129,7 +142,7 @@ public class BuffaloTraceQuartzJob implements Job {
                     if (!soldOutMessageSent) {
                         String textMessage = productName + " is now SOLD OUT on the Buffalo Trace website.";
                         logger.info("Getting ready to send {}", textMessage);
-                        new MessageBirdSmsSender().sendMessage(textMessage);
+                        new MessageBirdSmsSender().sendMessage(textMessage, RECIPIENTS);
                         soldOutMessageSent = true;
                     }
                     else {

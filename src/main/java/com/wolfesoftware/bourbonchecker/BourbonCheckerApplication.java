@@ -14,31 +14,36 @@ public class BourbonCheckerApplication {
     public static void main(String[] args) {
 
         try {
-            // Build a TRIGGER for quartz
-            String cronExpression = BourbonCheckerSettings.getInstance().getCronExpression();
-            if (cronExpression == null) {
-                logger.error("cronExpression not found in the BourbonCheckerSettings.  Exiting now.");
+            String heartbeatCronExpression = BourbonCheckerSettings.getInstance().getHeartbeatCronExpression();
+            if (heartbeatCronExpression == null) {
+                logger.error("heartbeatCronExpression not found in the BourbonCheckerSettings.  Exiting now.");
                 return;
             }
-            logger.debug("Cron Expression = {}", cronExpression);
-            CronTrigger trigger = TriggerBuilder.newTrigger().
-                    withIdentity("TheBourbonTrigger").
-                    withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).
-                    build();
 
-            // Build a JOB_DETAIL for quartz
-            JobDetail job = JobBuilder.newJob(BuffaloTraceQuartzJob.class).
+            // Build a TRIGGER and JOB_DETAIL for Buffalo Trace Website Monitoring
+            String buffaloTraceCronExpression = BourbonCheckerSettings.getInstance().getBuffaloTraceCronExpression();
+            if (buffaloTraceCronExpression == null) {
+                logger.error("buffaloTraceCronExpression not found in the BourbonCheckerSettings.  Exiting now.");
+                return;
+            }
+            logger.debug("Buffalo Trace Cron Expression = {}", buffaloTraceCronExpression);
+            CronTrigger buffaloTraceTrigger = TriggerBuilder.newTrigger().
+                    withIdentity("TheBourbonTrigger").
+                    withSchedule(CronScheduleBuilder.cronSchedule(buffaloTraceCronExpression)).
+                    build();
+            JobDetail buffaloTraceJob = JobBuilder.newJob(BuffaloTraceQuartzJob.class).
                     withIdentity("TheBourbonJob").
                     build();
 
-            Properties quartzStaticProperties = new Properties();
-            quartzStaticProperties.put("org.quartz.threadPool.threadCount", "1");
+
 
             try {
+                Properties quartzStaticProperties = new Properties();
+                quartzStaticProperties.put("org.quartz.threadPool.threadCount", "2");
                 SchedulerFactory schedulerFactory = new StdSchedulerFactory(quartzStaticProperties);
                 Scheduler scheduler = schedulerFactory.getScheduler();
                 scheduler.start();
-                scheduler.scheduleJob(job, trigger);
+                scheduler.scheduleJob(buffaloTraceJob, buffaloTraceTrigger);
             } catch (Exception e) {
                 logger.error("An unanticipated error occurred.  It's message is {} ", e.getMessage());
             }

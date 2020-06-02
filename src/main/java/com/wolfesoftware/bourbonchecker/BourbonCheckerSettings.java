@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class BourbonCheckerSettings {
@@ -14,7 +13,8 @@ public class BourbonCheckerSettings {
     private static BourbonCheckerSettings settings;
 
     // Attributes
-    private String cronExpression;
+    private String buffaloTraceCronExpression;
+    private String heartbeatCronExpression;
     private String chromeDriverLocation;
 
     // Logger
@@ -42,11 +42,17 @@ public class BourbonCheckerSettings {
     }
 
     // Getters and Setters for Jackson
-    public String getCronExpression() {
-        return cronExpression;
+    public String getBuffaloTraceCronExpression() {
+        return buffaloTraceCronExpression;
     }
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
+    public void setBuffaloTraceCronExpression(String buffaloTraceCronExpression) {
+        this.buffaloTraceCronExpression = buffaloTraceCronExpression;
+    }
+    public String getHeartbeatCronExpression() {
+        return heartbeatCronExpression;
+    }
+    public void setHeartbeatCronExpression(String heartbeatCronExpression) {
+        this.heartbeatCronExpression = heartbeatCronExpression;
     }
     public String getChromeDriverLocation() {
         return chromeDriverLocation;

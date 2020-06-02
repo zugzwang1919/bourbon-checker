@@ -1,4 +1,5 @@
 {
-  "cronExpression" : "0 0/4 8-23 * * ?",
+  "buffaloTraceCronExpression" : "0 0/4 8-23 * * ?",
+  "heartbeatCronExpression" : "0 7 9,23 * * ?",
   "chromeDriverLocation" : "C:/Temp/ChromeDriver/chromedriver.exe"
 }
