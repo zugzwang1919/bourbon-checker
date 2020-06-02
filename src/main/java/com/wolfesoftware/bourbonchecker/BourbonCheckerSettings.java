@@ -64,7 +64,9 @@ public class BourbonCheckerSettings {
         try {
             f = (url == null) ? null : new File(url.toURI());
         }
-        catch(URISyntaxException e) {
+        // If ANY type of exception occurs (not just the Null Pointer exception), we'll try to locate
+        // the file explicitly below
+        catch(Exception e) {
             f = null;
         }
 

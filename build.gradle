@@ -35,7 +35,8 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+    // Use the same version of Jackson (2.10.0) that MessageBird does just to keep things easy
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
     compile group: 'com.messagebird', name: 'messagebird-api', version: '3.0.12'
     compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
@@ -62,7 +63,7 @@ task copyScripts(type:Copy) {
 }
 
 jar {
-    exclude('application.properties')
+    exclude('bourbon-checker.json')
 }
 
 task productionBuild() {

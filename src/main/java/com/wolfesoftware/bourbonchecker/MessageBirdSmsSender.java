@@ -22,36 +22,29 @@ public class MessageBirdSmsSender {
     public void sendMessage(String message) {
 
         // Keys
-        // LIVE - live_5DNJM45xRflSXYA88cdBvMEm1
+        // LIVE - live_sahwgCrOvdJ5tG97dEslrdMxQ
         // TEST - test_QdkvPlfJClByiCPwI5oFKIDC9
-        final MessageBirdService wsr = new MessageBirdServiceImpl("live_5DNJM45xRflSXYA88cdBvMEm1");
+        final MessageBirdService wsr = new MessageBirdServiceImpl("live_sahwgCrOvdJ5tG97dEslrdMxQ");
 
         // Add the service to the client
         final MessageBirdClient messageBirdClient = new MessageBirdClient(wsr);
 
         try {
 
-            List<BigInteger> recipients = new ArrayList();
+            List<BigInteger> recipients = new ArrayList<>();
             BigInteger russ = new BigInteger("18593278846");
             BigInteger roger = new BigInteger("18593385240");
             recipients.add(russ);
             recipients.add(roger);
-            final MessageResponse response = messageBirdClient.sendMessage("Russ Wolfe", message, recipients);
+            final MessageResponse response = messageBirdClient.sendMessage("12028516595", message, recipients);
             logger.debug("Response from MessageBird = {}", response.toString());
 
         }
-        catch (UnauthorizedException unauthorized) {
-            if (unauthorized.getErrors() != null) {
-                logger.error(unauthorized.getErrors().toString());
-            }
-            unauthorized.printStackTrace();
+        catch (UnauthorizedException | GeneralException e) {
+            logger.error(e.getMessage());
+            logger.error("Exception details: ", e);
         }
-        catch (GeneralException generalException) {
-            if (generalException.getErrors() != null) {
-                logger.error(generalException.getErrors().toString());
-            }
-            generalException.printStackTrace();
-        }
+
 
     }
 }
