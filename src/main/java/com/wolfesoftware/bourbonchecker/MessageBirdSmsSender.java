@@ -28,10 +28,8 @@ public class MessageBirdSmsSender {
 
         try {
 
-
             final MessageResponse response = messageBirdClient.sendMessage("12028516595", message, recipients);
             logger.debug("Response from MessageBird = {}", response.toString());
-
 
             // Let's make sure the messages were actually sent
             // FIXME - Some day, take a look to see why this always says 2 messages sent 0 delivered 0 failures.
