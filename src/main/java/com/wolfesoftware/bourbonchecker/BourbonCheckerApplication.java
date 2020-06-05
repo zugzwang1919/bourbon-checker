@@ -14,11 +14,20 @@ public class BourbonCheckerApplication {
     public static void main(String[] args) {
 
         try {
+            // Build a TRIGGER and JOB_DETAIL for a Heartbeat
             String heartbeatCronExpression = BourbonCheckerSettings.getInstance().getHeartbeatCronExpression();
             if (heartbeatCronExpression == null) {
                 logger.error("heartbeatCronExpression not found in the BourbonCheckerSettings.  Exiting now.");
                 return;
             }
+            logger.debug("Heartbeat Cron Expression = {}", heartbeatCronExpression);
+            CronTrigger heartbeatTrigger = TriggerBuilder.newTrigger().
+                    withIdentity("TheHeartbeatTrigger").
+                    withSchedule(CronScheduleBuilder.cronSchedule(heartbeatCronExpression)).
+                    build();
+            JobDetail heartbeatJob = JobBuilder.newJob(HeartbeatQuartzJob.class).
+                    withIdentity("TheHeartbeatJob").
+                    build();
 
             // Build a TRIGGER and JOB_DETAIL for Buffalo Trace Website Monitoring
             String buffaloTraceCronExpression = BourbonCheckerSettings.getInstance().getBuffaloTraceCronExpression();
@@ -44,6 +53,7 @@ public class BourbonCheckerApplication {
                 Scheduler scheduler = schedulerFactory.getScheduler();
                 scheduler.start();
                 scheduler.scheduleJob(buffaloTraceJob, buffaloTraceTrigger);
+                scheduler.scheduleJob(heartbeatJob, heartbeatTrigger);
             } catch (Exception e) {
                 logger.error("An unanticipated error occurred.  It's message is {} ", e.getMessage());
             }

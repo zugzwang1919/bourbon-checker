@@ -45,18 +45,21 @@ public class BourbonCheckerSettings {
     public String getBuffaloTraceCronExpression() {
         return buffaloTraceCronExpression;
     }
+    @SuppressWarnings("unused") //This is actually used by Jackson when marshalling
     public void setBuffaloTraceCronExpression(String buffaloTraceCronExpression) {
         this.buffaloTraceCronExpression = buffaloTraceCronExpression;
     }
     public String getHeartbeatCronExpression() {
         return heartbeatCronExpression;
     }
+    @SuppressWarnings("unused") //This is actually used by Jackson when marshalling
     public void setHeartbeatCronExpression(String heartbeatCronExpression) {
         this.heartbeatCronExpression = heartbeatCronExpression;
     }
     public String getChromeDriverLocation() {
         return chromeDriverLocation;
     }
+    @SuppressWarnings("unused") //This is actually used by Jackson when marshalling
     public void setChromeDriverLocation(String chromeDriverLocation) {
         this.chromeDriverLocation = chromeDriverLocation;
     }

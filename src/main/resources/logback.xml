@@ -7,17 +7,55 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/bourbon-checker.log</file>
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/bourbon-checker-debug.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>logs/archived/bourbon-checker-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- each archived file, size max 10KB -->
             <maxFileSize>10KB</maxFileSize>
             <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
             <totalSizeCap>2GB</totalSizeCap>
             <!-- 60 days to keep -->
             <maxHistory>60</maxHistory>
-
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/bourbon-checker-info.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/bourbon-checker-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each archived file, size max 10KB -->
+            <maxFileSize>10KB</maxFileSize>
+            <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
+            <totalSizeCap>2GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/bourbon-checker-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/bourbon-checker-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each archived file, size max 10KB -->
+            <maxFileSize>10KB</maxFileSize>
+            <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
+            <totalSizeCap>2GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
         </rollingPolicy>
         <encoder>
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
@@ -26,7 +64,9 @@
 
     <root level="debug">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="DEBUG" />
+        <appender-ref ref="INFO" />
+        <appender-ref ref="ERROR" />
     </root>
 
     <!-- Logging levels for Our stuff -->
