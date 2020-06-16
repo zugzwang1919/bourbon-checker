@@ -24,7 +24,7 @@ public class BuffaloTraceQuartzJob implements Job {
 
     // Static classes to maintain state across instances of this class
     private static final ProductInfo blantonsInfo = new ProductInfo("lanton", "Blanton's", 3);
-    private static final ProductInfo taylorInfo = new ProductInfo("aylor", "EH Taylor", 10);
+    private static final ProductInfo taylorInfo = new ProductInfo("EH Taylor Small Batch.png", "EH Taylor", 10);
     private static final ProductInfo eagleRareInfo = new ProductInfo("agle", "Eagle Rare", 24*60);
 
     private static final Logger logger = LoggerFactory.getLogger(BuffaloTraceQuartzJob.class);
